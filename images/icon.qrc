@@ -1,0 +1,26 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+    <file alias="AddBehavior_16x.png">AddBehavior_16x.png</file>
+    <file alias="AddConnection_16x.png">AddConnection_16x.png</file>
+    <file alias="Checkmark_16x.png">Checkmark_16x.png</file>
+    <file alias="CollapseLeft_lg_16x.png">CollapseLeft_lg_16x.png</file>
+    <file alias="CollapseUp_lg_16x.png">CollapseUp_lg_16x.png</file>
+    <file alias="Connect_16x.png">Connect_16x.png</file>
+    <file alias="ConnectPlugged_16x.png">ConnectPlugged_16x.png</file>
+    <file alias="ConnectUnplugged_16x.png">ConnectUnplugged_16x.png</file>
+    <file alias="DebugContinue_16x.png">DebugContinue_16x.png</file>
+    <file alias="Disconnect_16x.png">Disconnect_16x.png</file>
+    <file alias="Dynamic_16x.png">Dynamic_16x.png</file>
+    <file alias="DynamicGroup_16x.png">DynamicGroup_16x.png</file>
+    <file alias="ExpandArrow_16x.png">ExpandArrow_16x.png</file>
+    <file alias="ExpandDown_lg_16x.png">ExpandDown_lg_16x.png</file>
+    <file alias="ExpandRight_lg_16x.png">ExpandRight_lg_16x.png</file>
+    <file alias="FolderOpened_16x.png">FolderOpened_16x.png</file>
+    <file alias="Loading_16x.png">Loading_16x.png</file>
+    <file alias="OpenFolder_16x.png">OpenFolder_16x.png</file>
+    <file alias="run_16x.png">run_16x.png</file>
+    <file alias="StatusRun_16x.png">StatusRun_16x.png</file>
+    <file alias="Stop_16x.png">Stop_16x.png</file>
+    <file alias="Stop_white_48x.png">Stop_white_48x.png</file>
+</qresource>
+</RCC>
