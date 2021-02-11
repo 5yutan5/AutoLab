@@ -13,6 +13,7 @@ setup(
     longdescription=LONG_DESCRIPTION,
     long_description_content_type="text/markdown",
     url="https://github.com/5yutan5/AutoLab",
+    include_package_data=True,
     install_requires=["pyqt", "psutil"],
     packages=setuptools.find_packages(),
     classifiers=[
