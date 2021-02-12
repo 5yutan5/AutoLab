@@ -33,5 +33,5 @@ pip install git+https://github.com/5yutan5/AutoLab
 ```
 and
 ```
-pip install pyqt psutil
+pip install pyqt5 psutil
 ```
