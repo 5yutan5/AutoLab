@@ -1,6 +1,6 @@
 import numpy as np
 import pyqtgraph as pg
-from PyQt5.QtWidgets import QApplication
+from PySide6.QtWidgets import QApplication
 
 
 class RealTimePlotWidget(pg.PlotWidget):
@@ -66,12 +66,12 @@ class RealTimePlotWidget(pg.PlotWidget):
 def test():
     import sys
 
-    from AutoLab.utils.qthelpers import qapplication
+    from AutoLab.utils.qthelpers import create_qt_app
 
-    app = qapplication()
+    app = create_qt_app()
     graph = RealTimePlotWidget(5, "Voltage")
     graph.show()
-    sys.exit(app.exec())
+    sys.exit(app.exec_())
 
 
 if __name__ == "__main__":

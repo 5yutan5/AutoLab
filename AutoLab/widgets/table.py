@@ -1,14 +1,8 @@
 # -*- coding: utf-8 -*-
-from PyQt5.QtCore import QAbstractTableModel, QModelIndex, Qt, pyqtSignal
-from PyQt5.QtGui import QColor
-from PyQt5.QtWidgets import (
-    QHBoxLayout,
-    QLabel,
-    QLCDNumber,
-    QTableView,
-    QTableWidget,
-    QWidget,
-)
+from AutoLab.widgets.wrapper_widgets import AHBoxLayout, ALabel
+from PySide6.QtCore import QAbstractTableModel, QModelIndex, Qt, Signal
+from PySide6.QtGui import QColor
+from PySide6.QtWidgets import QLCDNumber, QTableView, QTableWidget, QWidget
 
 
 class ListTableModel(QAbstractTableModel):
@@ -25,7 +19,7 @@ class ListTableModel(QAbstractTableModel):
     def heade_index(self, index):
         self._header_index = index
         print(index)
-        self.layoutChanged.emit()
+        self.layoutChanged.emit()  # type: ignore
 
     @property
     def list_2d(self):
@@ -34,7 +28,7 @@ class ListTableModel(QAbstractTableModel):
     @list_2d.setter
     def list_2d(self, li):
         self._list = li
-        self.layoutChanged.emit()
+        self.layoutChanged.emit()  # type: ignore
 
     def data(self, index, role):
         """Cell content."""
@@ -78,11 +72,11 @@ class ListTableModel(QAbstractTableModel):
 
     def set_list(self, li):
         self._list = li
-        self.layoutChanged.emit()
+        self.layoutChanged.emit()  # type: ignore
 
 
 class ListTableView(QTableView):
-    selected = pyqtSignal(QModelIndex)
+    selected = Signal(QModelIndex)
 
     def __init__(self, li=[[""] * 5] * 5):
         super().__init__()
@@ -103,19 +97,19 @@ class ListTableView(QTableView):
 class Indicator(QWidget):
     def __init__(self, unit):
         super().__init__()
-        self.unit = QLabel(unit)
+        self.unit = ALabel(unit)
         self.lcd = QLCDNumber(6)
         self._initLayout()
 
     def _initLayout(self):
         self.setMinimumHeight(60)
-        hLayout = QHBoxLayout()
+        hLayout = AHBoxLayout()
         hLayout.addWidget(self.lcd)
         hLayout.addWidget(self.unit)
         self.setLayout(hLayout)
 
     def display(self, value: float):
-        self.lcd.display(value)
+        self.lcd.display(str(value))
 
 
 class SensorDataTable(QTableWidget):
@@ -140,24 +134,24 @@ class SensorDataTable(QTableWidget):
 
     def update(self, voltages: list[float], resistances: list[float]):
         for i, (voltage, resistance) in enumerate(zip(voltages, resistances)):
-            self.cellWidget(i, self.VOLTAGE_INDEX).display(voltage)
-            self.cellWidget(i, self.RESISTANCE_INDEX).display(resistance)
+            self.cellWidget(i, self.VOLTAGE_INDEX).display(str(voltage))
+            self.cellWidget(i, self.RESISTANCE_INDEX).display(str(resistance))
 
 
 def test():
     """Run ListTableView test"""
     import sys
 
-    from AutoLab.utils.qthelpers import qapplication
+    from AutoLab.utils.qthelpers import create_qt_app
 
-    app = qapplication()
+    app = create_qt_app()
     table_view = ListTableView()
     table_view.resize(900, 300)
     table_view.show()
     sensor_data_table = SensorDataTable(5)
     sensor_data_table.update([1, 2, 3], [1, 2, 3])
     sensor_data_table.show()
-    sys.exit(app.exec())
+    sys.exit(app.exec_())
 
 
 if __name__ == "__main__":

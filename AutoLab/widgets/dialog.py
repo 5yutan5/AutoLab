@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QFileDialog, QMessageBox, QWidget
+from PySide6.QtWidgets import QFileDialog, QMessageBox, QWidget
 
 
 class CriticalErrorMessageBox(QMessageBox):

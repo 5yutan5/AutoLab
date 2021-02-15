@@ -1,43 +1,69 @@
-from PyQt5.QtCore import QObject, Qt, QTimer
-from PyQt5.QtWidgets import QAction, QPushButton, QToolButton
+from PySide6.QtCore import QObject, Qt, QTimer
+from PySide6.QtGui import QAction
+from PySide6.QtWidgets import (QHBoxLayout, QLabel, QMenu, QPushButton,
+                               QToolBar, QToolButton, QVBoxLayout, QWidget)
 
 
-class PushButton(QPushButton):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.setCursor(Qt.PointingHandCursor)
-
-
-class ToolButton(QToolButton):
-    def __init__(self):
-        super().__init__()
-        self.setCursor(Qt.PointingHandCursor)
-
-
-class AutolabAction(QAction):
-    """AutoLab QAction class wrapper to handle cross platform patches."""
+class AAction(QAction):
+    """AAction class wrapper to handle cross platform patches."""
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
 
-class AutolabTimer(QTimer):
-    """AutoLab QTimer class wrapper to handle cross platform patches."""
+class AHBoxLayout(QHBoxLayout):
+    """AHBoxLayout class wrapper to handle cross platform patches"""
+
+    def __init__(self, parent: QWidget = None) -> None:
+        super().__init__(parent)  # type: ignore
+
+
+class ALabel(QLabel):
+    """AHBoxLayout class wrapper to handle cross platform patches"""
+    def __init__(self, text: str = None, parent: QWidget = None) -> None:
+        super().__init__(text=text, parent=parent) # type: ignore
+
+
+class AMenu(QMenu):
+    """AMenu class wrapper to handle cross platform patches"""
+
+    def __init__(self, parent: QWidget = None) -> None:
+        super().__init__(parent=parent)  # type: ignore
+
+
+class APushButton(QPushButton):
+    """APushButton class wrapper to handle cross plat form patches."""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.cursor().setShape(Qt.PointingHandCursor)
+
+
+class ATimer(QTimer):
+    """ATimer class wrapper to handle cross platform patches."""
 
     def __init__(self, parent: QObject):
         super().__init__(parent=parent)
 
 
-def test():
-    import sys
+class AToolBar(QToolBar):
+    """AToolBar class wrapper to handle cross platform patches."""
 
-    from AutoLab.utils.qthelpers import qapplication
-
-    app = qapplication()
-    push_button = PushButton("Test")
-    push_button.show()
-    sys.exit(app.exec())
+    def __init__(self, parent: QWidget, title: str = None) -> None:
+        super().__init__(parent=parent)  # type: ignore
+        self.setMovable(False)
 
 
-if __name__ == "__main__":
-    test()
+class AToolButton(QToolButton):
+    """AToolButton class wrapper to handle cross plat form patches."""
+
+    def __init__(self):
+        super().__init__()
+        self.cursor().setShape(Qt.PointingHandCursor)
+
+
+class AVBoxLayout(QVBoxLayout):
+    """AVBoxLayout class wrapper to handle cross platform patches"""
+
+    def __init__(self, parent: QWidget = None) -> None:
+        super().__init__(parent)  # type: ignore

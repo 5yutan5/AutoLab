@@ -1,8 +1,8 @@
 from typing import Iterable, Union
 
 from AutoLab.utils.system import search_ports
-from PyQt5.QtCore import QAbstractListModel, Qt
-from PyQt5.QtWidgets import QComboBox
+from PySide6.QtCore import QAbstractListModel, Qt
+from PySide6.QtWidgets import QComboBox
 from serial.tools.list_ports_common import ListPortInfo
 
 
@@ -29,7 +29,7 @@ class CheckListModel(QAbstractListModel):
 
     def flags(self, index):
         """Set editable flag."""
-        return Qt.ItemIsUserCheckable | Qt.ItemIsEnabled
+        return Qt.ItemIsUserCheckable | Qt.ItemIsEnabled  # type:ignore
 
     def setData(self, index, value, role):
         """Cell content change"""
@@ -49,14 +49,15 @@ class CheckListModel(QAbstractListModel):
 class CheckCombobox(QComboBox):
     def __init__(self):
         super().__init__()
-        self.setModel(CheckListModel())
+        self._model = CheckListModel()
+        self.setModel(self._model)
 
     def set_texts(self, texts: Iterable[str]):
-        self.model().set_texts(texts)
-        self.model().layoutChanged.emit()
+        self._model.set_texts(texts)
+        self._model.layoutChanged.emit()  # type: ignore
 
     def get_checked_texts(self) -> list[str]:
-        return self.model().get_checked_texts()
+        return self._model.get_checked_texts()
 
 
 class FlexiblePopupCombobox(QComboBox):
@@ -82,7 +83,14 @@ class PortCombobox(FlexiblePopupCombobox):
     def filter(self, filter: str) -> None:
         self._filter = filter
 
-    def showPopup(self):
+    def get_current_port_info(self) -> Union[ListPortInfo, None]:
+        return (
+            None
+            if len(self._port_infos) == 0
+            else self._port_infos[self.currentIndex()]
+        )
+
+    def showPopup(self) -> None:
         self._port_infos.clear()
         self.clear()
         self._port_infos = search_ports(self._filter)
@@ -92,30 +100,20 @@ class PortCombobox(FlexiblePopupCombobox):
             self.addItems([str(port.description) for port in self._port_infos])
         super().showPopup()
 
-    def set_item(self, text) -> None:
-        self.clear()
-        self.addItem(text)
-
-    def get_current_port_info(self) -> Union[ListPortInfo, None]:
-        if len(self._port_infos) == 0:
-            return None
-        else:
-            return self._port_infos[self.currentIndex()]
-
 
 def test():
     import sys
 
-    from AutoLab.utils.qthelpers import qapplication
+    from AutoLab.utils.qthelpers import create_qt_app
 
-    app = qapplication()
+    app = create_qt_app()
     check_combobox = CheckCombobox()
     check_combobox.show()
     texts = ["test1", "test2", "test3", "test4", "test5"]
     check_combobox.set_texts(texts)
     port_combobox = PortCombobox()
     port_combobox.show()
-    sys.exit(app.exec())
+    sys.exit(app.exec_())
 
 
 if __name__ == "__main__":

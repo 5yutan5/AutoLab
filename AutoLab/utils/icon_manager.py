@@ -1,40 +1,35 @@
 from enum import Enum
 
-import AutoLab.utils.resources_icon
-from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QStyle, qApp
-
-# ICON_FOLDER_PATH = "AutoLab/images/"
+import AutoLab.icons.resource_icons
+from PySide6.QtGui import QIcon
 
 
-class IconName(Enum):
-    ADD_BEHAVIOR = ":AddBehavior_16x.png"
-    ADD_CONNECTION = ":AddConnection_16x.png"
-    CHECK_MARK = ":Checkmark_16x.png"
-    COLLAPSE_LEFT = ":CollapseLeft_lg_16x.png"
-    COLLAPSE_UP = ":CollapseUp_lg_16x.png"
-    CONNECT = ":Connect_16x.png"
-    CONNECT_PLUGGED = ":ConnectPlugged_16x.png"
-    CONNECT_UNPLUGGED = ":ConnectUnplugged_16x.png"
-    CONTINUE = ":DebugContinue_16x.png"
-    DISCONNECT = ":Disconnect_16x.png"
-    DYNAMIC = ":Dynamic_16x.png"
-    DYNAMIC_GROUP = ":DynamicGroup_16x.png"
-    EXPAND_ARROW = ":ExpandArrow_16x.png"
-    EXPAND_DOWN = ":ExpandDown_lg_16x.png"
-    EXPAND_RIGHT = ":ExpandRight_lg_16x.png"
-    FOLDER_OPENED = ":FolderOpened_16x.png"
-    LOADING = ":Loading_16x.png"
-    OPEN_FOLDER = ":OpenFolder_16x.png"
-    RUN = ":run_16x.png"
-    STATUS_RUN = ":StatusRun_16x.png"
-    STOP = ":Stop_16x.png"
-    STOP_STAGE = ":Stop_white_48x.png"
+class IconNames(Enum):
+    ADD_BEHAVIOR = ":AddBehavior_16x.svg"
+    ADD_CONNECTION = ":AddConnection_16x.svg"
+    CHECK_MARK = ":Checkmark_16x.svg"
+    COLLAPSE_LEFT = ":CollapseLeft_16x.svg"
+    COLLAPSE_UP = ":CollapseUp_16x.svg"
+    CONNECT = ":Connect_16x.svg"
+    CONNECT_PLUGGED = ":ConnectPlugged_16x.svg"
+    CONNECT_UNPLUGGED = ":ConnectUnplugged_16x.svg"
+    CONTINUE = ":DebugContinue_16x.svg"
+    DISCONNECT = ":Disconnect_16x.svg"
+    DYNAMIC = ":Dynamic_16x.svg"
+    DYNAMIC_GROUP = ":DynamicGroup_16x.svg"
+    EXPAND_ARROW = ":ExpandArrow_16x.svg"
+    EXPAND_DOWN = ":ExpandDown_16x.svg"
+    EXPAND_RIGHT = ":ExpandRight_16x.svg"
+    FOLDER_OPENED = ":FolderOpened_16x.svg"
+    LOADING = ":Loading_16x.svg"
+    OPEN_FOLDER = ":OpenFolder_16x.svg"
+    RUN = ":Run_16x.svg"
+    STATUS_OK = ":StatusOK_16x.svg"
+    STATUS_PAUSE = ":StatusPause_16x.svg"
+    STATUS_RUN = ":StatusRun_16x.svg"
+    STATUS_SEALED = ":StatusSealed_16x.svg"
+    STOP = ":Stop_16x.svg"
 
 
-def icon(name: IconName) -> QIcon:
+def create_qicon(name: IconNames) -> QIcon:
     return QIcon(name.value)
-
-
-def default_icon(icon: QStyle.StandardPixmap) -> QIcon:
-    return qApp.style().standardIcon(icon)

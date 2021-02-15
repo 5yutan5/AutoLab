@@ -1,39 +1,47 @@
-from AutoLab.widgets.wrapper_widgets import AutolabTimer
-from PyQt5.QtCore import QObject, QTimerEvent
+from AutoLab.widgets.wrapper_widgets import ATimer
+from PySide6.QtCore import QObject, QTimerEvent
 
 
-class AutolabCountTimer(AutolabTimer):
+class CountTimer(ATimer):
+    """The CounterTimer class The provides repetitive and single-shot timers. And this
+    timer remembers the number of timeouts. You can check the `current count` property
+    by checking the current count property. The count resets when the timer stops.
+
+    Parameters
+    ----------
+    parent : QObject
+        Parent of this Timer.
+
+    Attributes
+    ----------
+    enable_counter : bool
+        A state that indicates whether to count.
+    """
+
     def __init__(self, parent: QObject) -> None:
         super().__init__(parent)
         self._counter = 0
-        self._enable_counter = True
+        self.enable_counter = True
 
     @property
-    def counter(self) -> int:
+    def current_count(self) -> int:
         return self._counter
 
-    @counter.setter
-    def counter(self, count: int) -> None:
-        self._counter = count
-
-    @property
-    def enable_counter(self) -> bool:
-        return self._enable_counter
-
-    @enable_counter.setter
-    def enable_counter(self, enable: bool) -> None:
-        self._enable_counter = enable
-
     def _increment(self) -> None:
-        if self._enable_counter:
+        """Increment `self._counter`, When `self.enable_count` is True."""
+        if self.enable_counter:
             self._counter += 1
         else:
             pass
 
     def stop(self) -> None:
+        """Override Qt method to reset `self._counter` to 0.
+        """
         super().stop()
         self._counter = 0
 
-    def timerEvent(self, a0: QTimerEvent) -> None:
+    def timerEvent(self, event: QTimerEvent) -> None:
+        """Override Qt method to increment `self._counter`.
+        """
         self._increment()
-        return super().timerEvent(a0)
+        return super().timerEvent(event)

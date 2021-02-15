@@ -3,22 +3,27 @@ from typing import Type
 
 from AutoLab.style.stylesheet import style_sheet
 from AutoLab.widgets.dialog import CriticalErrorMessageBox
-from AutoLab.widgets.timer import AutolabCountTimer
-from AutoLab.widgets.wrapper_widgets import (AutolabAction, PushButton,
-                                             ToolButton)
-from PyQt5.QtCore import QEventLoop, QObject, QSize, Qt, QTimer
-from PyQt5.QtGui import QIcon, QKeySequence
-from PyQt5.QtWidgets import QApplication, QHBoxLayout, QLabel, QWidget
+from AutoLab.widgets.timer import CountTimer
+from AutoLab.widgets.wrapper_widgets import (
+    AAction,
+    AHBoxLayout,
+    ALabel,
+    APushButton,
+    ATimer,
+    AToolButton,
+)
+from PySide6.QtCore import SLOT, QEventLoop, QObject, QSize, Qt
+from PySide6.QtGui import QIcon, QKeySequence
+from PySide6.QtWidgets import QApplication, QWidget
 
 
-def qapplication():
-    autolabApplication = QApplication
-    app = autolabApplication.instance()
-    if app is None:
-        app = autolabApplication(["AutoLab"])
-        app.setApplicationName("AutoLab")
-        app.setStyleSheet(style_sheet)
-    return app
+def add_unit(widget: QWidget, text: str) -> QWidget:
+    h_layout = AHBoxLayout()
+    h_layout.addWidget(widget)
+    h_layout.addWidget(ALabel(text))
+    widget_with_label = QWidget()
+    widget_with_label.setLayout(h_layout)
+    return widget_with_label
 
 
 def create_action(
@@ -30,21 +35,21 @@ def create_action(
     name: str = None,
     shortcut: str = None,
     enable: bool = True,
-) -> AutolabAction:
-    action = AutolabAction(parent)
+) -> AAction:
+    action = AAction(parent)
     if text is not None:
         action.setText(text)
     if triggered is not None:
-        action.triggered.connect(triggered)
+        action.triggered.connect(triggered)  # type: ignore
     if toggled is not None:
-        action.toggled.connect(toggled)
+        action.toggled.connect(toggled)  # type: ignore
         action.setCheckable(True)
     if icon is not None:
         action.setIcon(icon)
     if name is not None:
         action.setObjectName(name)
     if shortcut is not None:
-        action.setShortcut(QKeySequence(shortcut))
+        action.setShortcut(QKeySequence(shortcut))  # type: ignore
     action.setEnabled(enable)
     return action
 
@@ -57,27 +62,39 @@ def create_push_button(
     text: str = None,
     toggled=None,
 ):
-    button = PushButton()
+    button = APushButton()
     if clicked is not None:
-        button.clicked.connect(clicked)
-    if fixed_width is not None:
-        button.setFixedWidth(fixed_width)
+        button.clicked.connect(clicked)  # type:ignore
     if fixed_height is not None:
         button.setFixedHeight(fixed_height)
+    if fixed_width is not None:
+        button.setFixedWidth(fixed_width)
     if icon is not None:
         button.setIcon(icon)
     if text is not None:
         button.setText(text)
     if toggled is not None:
-        button.toggled.connect(toggled)
+        button.toggled.connect(toggled)  # type: ignore
         button.setCheckable(True)
     return button
 
 
+def create_qt_app(app_name: str = None) -> QApplication:
+    if app_name is None:
+        app_name = "AutoLab"
+    autolabApplication = QApplication
+    app = autolabApplication.instance()
+    if app is None:
+        app = autolabApplication([app_name])
+        app.setApplicationName(app_name)
+        app.setStyleSheet(style_sheet)
+    return app  # type: ignore
+
+
 def create_timer(parent, timeout=None, enable_counter: bool = False):
-    timer = AutolabCountTimer(parent)
+    timer = CountTimer(parent)
     if timeout is not None:
-        timer.timeout.connect(timeout)
+        timer.timeout.connect(timeout)  # type: ignore
     timer.enable_counter = enable_counter
     return timer
 
@@ -93,7 +110,7 @@ def create_tool_button(
     toggled=None,
     triggered=None,
 ):
-    button = ToolButton()
+    button = AToolButton()
     if arrow_type is not None:
         button.setArrowType(arrow_type)
     if fixed_height is not None:
@@ -109,34 +126,11 @@ def create_tool_button(
     if text is not None:
         button.setText(text)
     if toggled is not None:
-        button.toggled.connect(toggled)
+        button.toggled.connect(toggled)  # type: ignore
         button.setCheckable(True)
     if triggered is not None:
-        button.triggered.connect(triggered)
+        button.triggered.connect(triggered)  # type: ignore
     return button
-
-
-def add_qLabel(widget: QWidget, text: str) -> QWidget:
-    h_layout = QHBoxLayout()
-    h_layout.addWidget(widget)
-    h_layout.addWidget(QLabel(text))
-    widget_with_label = QWidget()
-    widget_with_label.setLayout(h_layout)
-    return widget_with_label
-
-
-def reconnect_slot(signal, new_slot, old_slot=None) -> None:
-    if old_slot is not None:
-        signal.disconnect(old_slot)
-    else:
-        signal.disconnect()
-    signal.connect(new_slot)
-
-
-def sleep_nonblock_window(millisecond: int) -> None:
-    loop = QEventLoop()
-    QTimer.singleShot(millisecond, loop.quit)
-    loop.exec()
 
 
 def popup_exception_message(
@@ -150,8 +144,22 @@ def popup_exception_message(
             try:
                 func(*args, **kwargs)
             except exception as e:
-                message_box(text=str(e), parent=parent).exec()
+                message_box(text=str(e), parent=parent).exec_()
 
         return wrapper
 
     return _popup_exception_message
+
+
+def reconnect_slot(signal, new_slot, old_slot=None) -> None:
+    if old_slot is not None:
+        signal.disconnect(old_slot)
+    else:
+        signal.disconnect()
+    signal.connect(new_slot)
+
+
+def sleep_nonblock_window(msec: int) -> None:
+    loop = QEventLoop()
+    ATimer.singleShot(msec, Qt.PreciseTimer, loop, SLOT("quit()"))  # type:ignore
+    loop.exec_()
