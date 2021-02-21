@@ -1,11 +1,10 @@
 from enum import Enum, auto
 
 from AutoLab.utils.icon_manager import IconNames, create_qicon
-from AutoLab.utils.qthelpers import create_timer, create_tool_button
+from AutoLab.utils.qthelpers import create_action, create_timer, create_tool_button
 from AutoLab.utils.system import cpu_usage, phymem_usage
-from AutoLab.widgets.menu import CheckMenu
 from AutoLab.widgets.wrapper_widgets import AAction, AHBoxLayout, AMenu
-from PySide6.QtCore import QMargins, QPoint, Qt, Signal
+from PySide6.QtCore import QMargins, QPoint, Signal
 from PySide6.QtGui import QContextMenuEvent, QIcon
 from PySide6.QtWidgets import QMainWindow, QStatusBar, QWidget
 
@@ -209,12 +208,12 @@ class MeasureStatus(StatusBarWidget):
 
     def change_running(self):
         """Switch to running mode of this widget."""
-        self.update_icon(create_qicon(IconNames.LOADING))
+        self.update_icon(create_qicon(IconNames.PLAY_CIRCLE_GREEN))
         self.update_tool_tip("Running")
 
     def change_stopping(self):
         """Switch to stopping mode of this widget."""
-        self.update_icon(create_qicon(IconNames.STATUS_PAUSE))
+        self.update_icon(create_qicon(IconNames.PAUSE_CIRCLE_RED))
         self.update_tool_tip("Stopping")
 
 
@@ -240,12 +239,12 @@ class DeviceConnectStatus(StatusBarWidget):
 
     def change_connecting(self):
         """Switch to connecting mode of this widget."""
-        self.update_icon(create_qicon(IconNames.CONNECT_PLUGGED))
+        self.update_icon(create_qicon(IconNames.CONNECT_PLUGGED_WHITE))
         self.update_tool_tip(f"{self._device_name} Connecting")
 
     def change_disconnecting(self):
         """Switch to disconnecting mode of this widget."""
-        self.update_icon(create_qicon(IconNames.CONNECT_UNPLUGGED))
+        self.update_icon(create_qicon(IconNames.CONNECT_UNPLUGGED_WHITE))
         self.update_tool_tip(f"{self._device_name} Disconnecting")
 
 
@@ -279,14 +278,21 @@ class StatusBar(QStatusBar):
         """Override Qt method to pop up a list of statuses and change visible of
         status.
         """
-        menu = CheckMenu(self)
-        menu.set_checked_dict(self._checked_dict)
+        menu = AMenu(self)
+        for text, is_checked in self._checked_dict.items():
+            action = create_action(
+                parent=self,
+                text=text,
+                is_checkable=True,
+                is_checked=is_checked,
+            )
+            menu.addAction(action)  # type: ignore
         # Display popup menu on places of right-clicked.
         selected_action = menu.exec_(self.mapToGlobal(event.pos()))  # type: ignore
         if selected_action is not None:
             action_text = selected_action.text()
             is_check = self._checked_dict[action_text]
-            self._checked_dict[action_text] = Qt.Unchecked if is_check else Qt.Checked
+            self._checked_dict[action_text] = not is_check
             if is_check:
                 self._status_dict[action_text].hide()
             else:
@@ -313,7 +319,7 @@ class StatusBar(QStatusBar):
             self.addPermanentWidget(status_bar_widget)
         elif align == self.Align.LEFT:
             self.addWidget(status_bar_widget)
-        self._checked_dict[status_bar_widget.status_name] = Qt.Checked
+        self._checked_dict[status_bar_widget.status_name] = True
         self._status_dict[status_bar_widget.status_name] = status_bar_widget
 
     def popup_actions(self, actions: list[AAction]):
