@@ -1,7 +1,7 @@
 import functools
 from typing import Type
 
-from AutoLab.style.stylesheet import style_sheet
+from AutoLab.utils.style_manager import add_style_sheet, load_style_sheet
 from AutoLab.widgets.dialog import CriticalErrorMessageBox
 from AutoLab.widgets.timer import CountTimer
 from AutoLab.widgets.wrapper_widgets import (
@@ -34,6 +34,8 @@ def create_action(
     triggered=None,
     name: str = None,
     shortcut: str = None,
+    is_checked: bool = False,
+    is_checkable: bool = False,
     enable: bool = True,
 ) -> AAction:
     action = AAction(parent)
@@ -50,6 +52,8 @@ def create_action(
         action.setObjectName(name)
     if shortcut is not None:
         action.setShortcut(QKeySequence(shortcut))  # type: ignore
+    action.setChecked(is_checked)
+    action.setCheckable(is_checkable)
     action.setEnabled(enable)
     return action
 
@@ -87,7 +91,8 @@ def create_qt_app(app_name: str = None) -> QApplication:
     if app is None:
         app = autolabApplication([app_name])
         app.setApplicationName(app_name)
-        app.setStyleSheet(style_sheet)
+        style_sheet = load_style_sheet("basic_style")
+        add_style_sheet(app, style_sheet)
     return app  # type: ignore
 
 
@@ -109,6 +114,7 @@ def create_tool_button(
     text: str = None,
     toggled=None,
     triggered=None,
+    object_name: str = None,
 ):
     button = AToolButton()
     if arrow_type is not None:
@@ -130,6 +136,8 @@ def create_tool_button(
         button.setCheckable(True)
     if triggered is not None:
         button.triggered.connect(triggered)  # type: ignore
+    if object_name is not None:
+        button.setObjectName(object_name)
     return button
 
 
