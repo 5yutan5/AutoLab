@@ -14,7 +14,7 @@ setup(
     url="https://github.com/5yutan5/AutoLab",
     include_package_data=True,
     packages=find_packages(exclude="tests"),
-    package_data={"style": ["style/*.qss"]},
+    package_data={"style": ["*.qss"]},
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
