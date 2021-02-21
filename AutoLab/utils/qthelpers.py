@@ -96,10 +96,14 @@ def create_qt_app(app_name: str = None) -> QApplication:
     return app  # type: ignore
 
 
-def create_timer(parent, timeout=None, enable_counter: bool = False):
+def create_timer(
+    parent, timeout=None, enable_counter: bool = False, timer_type: Qt.TimerType = None
+):
     timer = CountTimer(parent)
     if timeout is not None:
         timer.timeout.connect(timeout)  # type: ignore
+    if timer_type is not None:
+        timer.setTimerType(timer_type)
     timer.enable_counter = enable_counter
     return timer
 
