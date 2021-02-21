@@ -1,5 +1,4 @@
-import setuptools
-from setuptools import setup
+from setuptools import find_packages, setup
 
 with open("README.md", "r") as f:
     LONG_DESCRIPTION = f.read()
@@ -14,7 +13,8 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/5yutan5/AutoLab",
     include_package_data=True,
-    packages=setuptools.find_packages(),
+    packages=find_packages(exclude="tests"),
+    package_data={"style": "*.qss"},
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
